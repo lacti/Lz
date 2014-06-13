@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LzEngine", "LzEngine\LzEngine.csproj", "{E703C2D4-F38B-4DCC-BAC1-FF437CAC947C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LzServer", "LzServer\LzServer.csproj", "{2FDAD53A-1475-47D4-8256-0B40637562CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LzClient", "LzClient\LzClient.csproj", "{FC1186A8-88BC-498C-A61B-22466724752F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E703C2D4-F38B-4DCC-BAC1-FF437CAC947C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E703C2D4-F38B-4DCC-BAC1-FF437CAC947C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E703C2D4-F38B-4DCC-BAC1-FF437CAC947C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E703C2D4-F38B-4DCC-BAC1-FF437CAC947C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FDAD53A-1475-47D4-8256-0B40637562CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FDAD53A-1475-47D4-8256-0B40637562CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FDAD53A-1475-47D4-8256-0B40637562CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FDAD53A-1475-47D4-8256-0B40637562CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC1186A8-88BC-498C-A61B-22466724752F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC1186A8-88BC-498C-A61B-22466724752F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC1186A8-88BC-498C-A61B-22466724752F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC1186A8-88BC-498C-A61B-22466724752F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

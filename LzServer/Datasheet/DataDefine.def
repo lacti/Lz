@@ -1,0 +1,4 @@
+﻿World.Config@port : int
+World.Config@maxNpcCount : int
+World.Size@width : int
+World.Size@height : int

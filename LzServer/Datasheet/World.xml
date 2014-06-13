@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<World>
+  <Config port="40123" maxNpcCount="99"/>
+  <Size width="80" height="80"/>
+</World>
