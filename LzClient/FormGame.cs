@@ -1,16 +1,17 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
-using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LzClient.Object;
-using LzClient.Util;
 using LzEngine.Enum;
 using LzEngine.Packet;
+using LzEngine.Util;
+using LzEngine.World;
 
 namespace LzClient
 {
@@ -18,22 +19,25 @@ namespace LzClient
     {
         private readonly Dictionary<int, Character> _characters = new Dictionary<int, Character>();
 
-        private readonly PacketDispatcher _dispatcher = new PacketDispatcher();
-        private readonly List<IEnumerator> _drawEnumerators = new List<IEnumerator>();
+        private readonly Coroutine _coro = new Coroutine();
+        private readonly List<IDrawObject> _drawObjects = new List<IDrawObject>();
 
-        private readonly GraphicsHolder _graphicsHolder = new GraphicsHolder();
+        private readonly PacketDispatcher _dispatcher = new PacketDispatcher();
+
+#if DEBUG
         private readonly string _host = "127.0.0.1";
-        private readonly List<DrawDelegate> _newDrawDelegates = new List<DrawDelegate>();
+#else
+        private readonly string _host = "54.250.154.191";
+#endif
+
         private readonly int _port = 40123;
-        private readonly Socket _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        private readonly List<Character> _targetCacheX = new List<Character>();
-        private readonly List<Character> _targetCacheY = new List<Character>();
-        private Character _attackTarget;
+        private readonly PacketSession _session = new PacketSession();
         private bool _connected;
         private PointF _lastCameraPos = PointF.Empty;
 
         private Character _player;
-        private bool _selectEnemyMode;
+        private WorldMap _worldMap;
+        private Bitmap _worldBackground;
 
         public FormGame()
         {
@@ -66,6 +70,8 @@ namespace LzClient
         private void FormGame_Load(object sender, EventArgs e)
         {
             Task.Factory.StartNew(PacketPump);
+
+            _coro.AddEntry(ClearChatMessage);
         }
 
         private T Spawn<T>(int objectId, string name, Point pos) where T : Character
@@ -76,7 +82,8 @@ namespace LzClient
                 return null;
 
             _characters.Add(objectId, newChar);
-            _newDrawDelegates.Add(newChar.Draw);
+            _coro.AddEntry(newChar.Update);
+            _drawObjects.Add(newChar);
             return (T) newChar;
         }
 
@@ -94,14 +101,14 @@ namespace LzClient
         {
             try
             {
-                _socket.Connect(_host, _port);
+                _session.Connect(_host, _port);
                 _connected = true;
                 while (true)
                 {
-                    var packet = await _socket.ReceivePacket();
+                    var packet = await _session.Receive();
                     Invoke(
                         new MethodInvoker(
-                            () => _dispatcher.Dispatch(packet, _socket)));
+                            () => _dispatcher.Dispatch(packet, _session)));
                 }
             }
             catch
@@ -117,6 +124,7 @@ namespace LzClient
 
             var g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
+
             if (_player != null)
             {
                 _lastCameraPos.X = _player.DrawPosition.X - panelCanvas.ClientSize.Width/2.0f + _player.Width/2.0f;
@@ -124,25 +132,22 @@ namespace LzClient
             }
             g.Transform = new Matrix(1, 0, 0, 1, -_lastCameraPos.X, -_lastCameraPos.Y);
 
-            foreach (var newOne in _newDrawDelegates)
-                _drawEnumerators.Add(newOne(_graphicsHolder));
-            _newDrawDelegates.Clear();
+            if (_worldBackground != null)
+                g.DrawImage(_worldBackground, 0, 0);
 
-            _graphicsHolder.Value = g;
-            foreach (
-                var removal in
-                    _drawEnumerators.Where(enumerator => !enumerator.MoveNext())
-                                    .ToArray())
-                _drawEnumerators.Remove(removal);
+            foreach (var each in _drawObjects)
+                each.Draw(g);
 
             if (_attackTarget != null)
             {
                 var targetDrawPos = _attackTarget.DrawPosition;
                 g.DrawRectangle(Pens.White, targetDrawPos.X, targetDrawPos.Y, _attackTarget.Width*1.33f, _attackTarget.Height*1.33f);
             }
+
+            DrawChatMessages(g);
         }
 
-        internal void HandlePacket(ObjectPacket packet, Socket peedSocket)
+        internal void HandlePacket(ObjectPacket packet, PacketSession peerSession)
         {
             switch (packet.State)
             {
@@ -162,12 +167,23 @@ namespace LzClient
             }
         }
 
-        internal void HandlePacket(LoginPacket packet, Socket peerSocket)
+        internal void HandlePacket(LoginPacket packet, PacketSession peerSession)
         {
+            // initialize world
+            _worldMap = MapObject.Load<WorldMap>(Path.Combine(ResourcePath.MapRoot, "World01.xml"));
+            _worldBackground = new Bitmap(_worldMap.Width, _worldMap.Height, PixelFormat.Format32bppArgb);
+            using (var g = Graphics.FromImage(_worldBackground))
+            {
+                _worldMap.Paint(g, Point.Empty, false);
+            }
+
+            foreach (var each in _worldMap.ObjectPositions)
+                _drawObjects.Add(new ObjectWrapper(each.Key, each.Value));
+
             _player = Spawn<Player>(packet.ObjectId, packet.Name, packet.CurrentPosition);
         }
 
-        internal void HandlePacket(MovePacket packet, Socket peedSocket)
+        internal void HandlePacket(MovePacket packet, PacketSession peerSession)
         {
             if (_player != null && _player.ObjectId == packet.ObjectId)
                 return;
@@ -179,17 +195,25 @@ namespace LzClient
             findOne.Correction(packet.CurrentPoint, packet.State, packet.Direction);
         }
 
-        internal void HandlePacket(SkillPacket packet, Socket peerSocket)
+        internal void HandlePacket(SkillPacket packet, PacketSession peerSession)
         {
             Character findOne;
             if (!_characters.TryGetValue(packet.AttackeeObjectId, out findOne))
                 return;
 
-            _newDrawDelegates.Add(new Effect(findOne).Draw);
+            var newEffect = new Effect(findOne);
+            _coro.AddEntry(newEffect.Update);
+            _drawObjects.Add(newEffect);
         }
 
-        private void timerRender_Tick(object sender, EventArgs e)
+        private void timerGame_Tick(object sender, EventArgs e)
         {
+            // update
+            _coro.IterateLogic();
+
+            // render
+            _drawObjects.RemoveAll(each => !each.IsDrawable);
+            _drawObjects.Sort((left, right) => left.DrawPrioirty - right.DrawPrioirty);
             panelCanvas.Invalidate();
         }
 
@@ -224,20 +248,42 @@ namespace LzClient
                     if (_attackTarget != null)
                         _selectEnemyMode = true;
                     break;
+                case Keys.Enter:
+                    if (textChat.Visible)
+                    {
+                        textChat.Enabled = false;
+                        textChat.Visible = false;
+                    }
+                    else
+                    {
+                        textChat.Enabled = true;
+                        textChat.Visible = true;
+                        textChat.Focus();
+                    }
+                    break;
             }
 
             if (direction != DirectionType.None)
             {
-                _player.Move(direction);
-                _socket.SendPacket(new MovePacket
+                if (_player.Move(direction))
+                {
+                    _session.Send(new MovePacket
                     {
                         ObjectId = _player.ObjectId,
                         CurrentPoint = _player.Position,
                         State = MoveStateType.Moving,
                         Direction = _player.Direction
                     });
+                }
             }
         }
+
+        #region Select Target
+
+        private readonly List<Character> _targetCacheX = new List<Character>();
+        private readonly List<Character> _targetCacheY = new List<Character>();
+        private Character _attackTarget;
+        private bool _selectEnemyMode;
 
         private void SelectTargetAndExecuteSkill(Keys keyCode)
         {
@@ -261,7 +307,7 @@ namespace LzClient
                 case Keys.Space:
                     if (_attackTarget != null)
                     {
-                        _socket.SendPacket(new SkillPacket
+                        _session.Send(new SkillPacket
                             {
                                 AttackerObjectId = _player.ObjectId,
                                 AttackeeObjectId = _attackTarget.ObjectId
@@ -346,6 +392,75 @@ namespace LzClient
             }
         }
 
-        private delegate IEnumerator DrawDelegate(GraphicsHolder holder);
+        #endregion
+
+        #region Chat
+
+        private void textChat_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter)
+                return;
+
+
+            var name = _player != null ? _player.Name : "Ghost";
+            _session.Send(new ChatPacket
+                {
+                    Name = name, Message =  textChat.Text
+                });
+
+            textChat.Text = "";
+            textChat.Enabled = false;
+            textChat.Visible = false;
+        }
+
+        private readonly List<Tuple<DateTime, ChatPacket>> _lastChatPackets = new List<Tuple<DateTime, ChatPacket>>();
+
+        internal void HandlePacket(ChatPacket packet, PacketSession peerSession)
+        {
+            _lastChatPackets.Add(Tuple.Create(DateTime.Now, packet));
+
+            const int maxChatCount = 8;
+            while (_lastChatPackets.Count > maxChatCount)
+                _lastChatPackets.RemoveAt(0);
+        }
+
+        private IEnumerable<int> ClearChatMessage()
+        {
+            while (true)
+            {
+                const int cleanInterval = 5;
+                var clearDateTime = DateTime.Now.AddSeconds(-cleanInterval);
+                _lastChatPackets.RemoveAll(e => clearDateTime > e.Item1);
+
+                const int checkInterval = 1000;
+                yield return checkInterval;
+            }
+        }
+
+        private void DrawChatMessages(Graphics g)
+        {
+            const int marginX = 18;
+            const int marginY = 18;
+            var y = marginY;
+            foreach (var each in _lastChatPackets)
+            {
+                var message = string.Format("<{0}> {1}", each.Item2.Name, each.Item2.Message);
+                var measure = g.MeasureString(message, Global.DefaultFont);
+                DrawText(g, message, marginX + _lastCameraPos.X, y + _lastCameraPos.Y, Brushes.BlanchedAlmond, Brushes.Black);
+
+                y += (int) (measure.Height*1.3);
+            }
+        }
+
+        private void DrawText(Graphics g, string text, float x, float y, Brush color, Brush outlineColor)
+        {
+            foreach (var dx in new[] { -1, 0, 1 })
+                foreach (var dy in new[] { -1, 0, 1 })
+                    g.DrawString(text, Global.DefaultFont, outlineColor, x + dx, y + dy);
+
+            g.DrawString(text, Global.DefaultFont, color, x, y);
+        }
+
+        #endregion
     }
 }

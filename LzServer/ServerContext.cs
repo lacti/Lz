@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
@@ -30,7 +29,7 @@ namespace LzServer
         private readonly NpcAi _npcAi;
         private readonly Random _random = new Random();
 
-        private readonly ConcurrentDictionary<Socket, int /* objectId */> _sockets = new ConcurrentDictionary<Socket, int>();
+        private readonly ConcurrentDictionary<PacketSession, int /* objectId */> _sessions = new ConcurrentDictionary<PacketSession, int>();
         private int _objectId;
 
         #endregion
@@ -62,9 +61,9 @@ namespace LzServer
 
         #region Network
 
-        public void BroadcastPacket(PacketBase packet, Socket exceptSocket = null)
+        public void BroadcastPacket(IPacket packet, PacketSession exceptSession = null)
         {
-            _listener.BroadcastPacket(packet, exceptSocket);
+            _listener.BroadcastPacket(packet, exceptSession);
         }
 
         #endregion
@@ -110,20 +109,20 @@ namespace LzServer
                        : null;
         }
 
-        public void AddPlayer(GameObject playerObject, Socket playerSocket)
+        public void AddPlayer(GameObject playerObject, PacketSession playerSession)
         {
             AddGameObject(playerObject);
 
             const int retryCount = 1024;
-            if (!Enumerable.Range(0, retryCount).Any(_ => _sockets.TryAdd(playerSocket, playerObject.ObjectId)))
+            if (!Enumerable.Range(0, retryCount).Any(_ => _sessions.TryAdd(playerSession, playerObject.ObjectId)))
                 throw new InvalidOperationException();
         }
 
-        public GameObject RemovePlayer(Socket playerSocket)
+        public GameObject RemovePlayer(PacketSession playerSession)
         {
             const int retryCount = 64;
             var objectId = 0;
-            return Enumerable.Range(0, retryCount).Any(_ => _sockets.TryRemove(playerSocket, out objectId))
+            return Enumerable.Range(0, retryCount).Any(_ => _sessions.TryRemove(playerSession, out objectId))
                        ? RemoveGameObject(objectId)
                        : null;
         }

@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Object tileset="002-Woods01.png" width="8" height="10">
+  <Origin x="7" y="8" />
+  <Tiles>
+    <Tile x="-7" y="-8" index="120" />
+    <Tile x="-6" y="-8" index="121" />
+    <Tile x="-5" y="-8" index="122" />
+    <Tile x="-4" y="-8" index="123" />
+    <Tile x="-3" y="-8" index="124" />
+    <Tile x="-2" y="-8" index="125" />
+    <Tile x="-1" y="-8" index="126" />
+    <Tile x="0" y="-8" index="127" />
+    <Tile x="-7" y="-7" index="128" />
+    <Tile x="-6" y="-7" index="129" />
+    <Tile x="-5" y="-7" index="130" />
+    <Tile x="-4" y="-7" index="131" />
+    <Tile x="-3" y="-7" index="132" />
+    <Tile x="-2" y="-7" index="133" />
+    <Tile x="-1" y="-7" index="134" />
+    <Tile x="0" y="-7" index="135" />
+    <Tile x="-7" y="-6" index="136" />
+    <Tile x="-6" y="-6" index="137" />
+    <Tile x="-5" y="-6" index="138" />
+    <Tile x="-4" y="-6" index="139" />
+    <Tile x="-3" y="-6" index="140" />
+    <Tile x="-2" y="-6" index="141" />
+    <Tile x="-1" y="-6" index="142" />
+    <Tile x="0" y="-6" index="143" />
+    <Tile x="-7" y="-5" index="144" />
+    <Tile x="-6" y="-5" index="145" />
+    <Tile x="-5" y="-5" index="146" />
+    <Tile x="-4" y="-5" index="147" />
+    <Tile x="-3" y="-5" index="148" />
+    <Tile x="-2" y="-5" index="149" />
+    <Tile x="-1" y="-5" index="150" />
+    <Tile x="0" y="-5" index="151" />
+    <Tile x="-7" y="-4" index="152" />
+    <Tile x="-6" y="-4" index="153" />
+    <Tile x="-5" y="-4" index="154" />
+    <Tile x="-4" y="-4" index="155" />
+    <Tile x="-3" y="-4" index="156" />
+    <Tile x="-2" y="-4" index="157" />
+    <Tile x="-1" y="-4" index="158" />
+    <Tile x="0" y="-4" index="159" />
+    <Tile x="-7" y="-3" index="160" />
+    <Tile x="-6" y="-3" index="161" />
+    <Tile x="-5" y="-3" index="162" />
+    <Tile x="-4" y="-3" index="163" />
+    <Tile x="-3" y="-3" index="164" />
+    <Tile x="-2" y="-3" index="165" />
+    <Tile x="-1" y="-3" index="166" />
+    <Tile x="0" y="-3" index="167" />
+    <Tile x="-7" y="-2" index="168" />
+    <Tile x="-6" y="-2" index="169" />
+    <Tile x="-5" y="-2" index="170" />
+    <Tile x="-4" y="-2" index="171" />
+    <Tile x="-3" y="-2" index="172" />
+    <Tile x="-2" y="-2" index="173" />
+    <Tile x="-1" y="-2" index="174" />
+    <Tile x="0" y="-2" index="175" />
+    <Tile x="-7" y="-1" index="176" />
+    <Tile x="-6" y="-1" index="177" />
+    <Tile x="-5" y="-1" index="178" />
+    <Tile x="-4" y="-1" index="179" />
+    <Tile x="-3" y="-1" index="180" />
+    <Tile x="-2" y="-1" index="181" />
+    <Tile x="-1" y="-1" index="182" />
+    <Tile x="0" y="-1" index="183" />
+    <Tile x="-7" y="0" index="184" />
+    <Tile x="-6" y="0" index="185" />
+    <Tile x="-5" y="0" index="186" />
+    <Tile x="-4" y="0" index="187" />
+    <Tile x="-3" y="0" index="188" />
+    <Tile x="-2" y="0" index="189" />
+    <Tile x="-1" y="0" index="190" />
+    <Tile x="0" y="0" index="191" />
+    <Tile x="-7" y="1" index="192" />
+    <Tile x="-6" y="1" index="193" />
+    <Tile x="-5" y="1" index="194" />
+    <Tile x="-4" y="1" index="195" />
+    <Tile x="-3" y="1" index="196" />
+    <Tile x="-2" y="1" index="197" />
+    <Tile x="-1" y="1" index="198" />
+    <Tile x="0" y="1" index="199" />
+  </Tiles>
+  <Obstacles>
+    <Obstacle x="-4" y="0" />
+    <Obstacle x="-3" y="0" />
+    <Obstacle x="-4" y="-1" />
+    <Obstacle x="-3" y="-1" />
+  </Obstacles>
+</Object>

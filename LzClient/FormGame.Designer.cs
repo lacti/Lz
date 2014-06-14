@@ -31,25 +31,40 @@ namespace LzClient
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.timerRender = new System.Windows.Forms.Timer(this.components);
-            this.panelCanvas = new CanvasPanel();
+            this.timerGame = new System.Windows.Forms.Timer(this.components);
+            this.panelCanvas = new LzClient.Util.CanvasPanel();
+            this.textChat = new System.Windows.Forms.TextBox();
+            this.panelCanvas.SuspendLayout();
             this.SuspendLayout();
             // 
-            // timerRender
+            // timerGame
             // 
-            this.timerRender.Enabled = true;
-            this.timerRender.Interval = 33;
-            this.timerRender.Tick += new System.EventHandler(this.timerRender_Tick);
+            this.timerGame.Enabled = true;
+            this.timerGame.Interval = 33;
+            this.timerGame.Tick += new System.EventHandler(this.timerGame_Tick);
             // 
             // panelCanvas
             // 
             this.panelCanvas.BackgroundImage = global::LzClient.Properties.Resources.Land001;
+            this.panelCanvas.Controls.Add(this.textChat);
             this.panelCanvas.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelCanvas.Location = new System.Drawing.Point(0, 0);
             this.panelCanvas.Name = "panelCanvas";
             this.panelCanvas.Size = new System.Drawing.Size(764, 510);
             this.panelCanvas.TabIndex = 0;
             this.panelCanvas.Paint += new System.Windows.Forms.PaintEventHandler(this.panelCanvas_Paint);
+            // 
+            // textChat
+            // 
+            this.textChat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textChat.Enabled = false;
+            this.textChat.Location = new System.Drawing.Point(0, 490);
+            this.textChat.Name = "textChat";
+            this.textChat.Size = new System.Drawing.Size(764, 21);
+            this.textChat.TabIndex = 1;
+            this.textChat.Visible = false;
+            this.textChat.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textChat_KeyDown);
             // 
             // FormGame
             // 
@@ -62,14 +77,17 @@ namespace LzClient
             this.Text = "Lz";
             this.Load += new System.EventHandler(this.FormGame_Load);
             this.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.FormGame_PreviewKeyDown);
+            this.panelCanvas.ResumeLayout(false);
+            this.panelCanvas.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Timer timerRender;
+        private System.Windows.Forms.Timer timerGame;
         private CanvasPanel panelCanvas;
+        private System.Windows.Forms.TextBox textChat;
     }
 }
 

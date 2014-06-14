@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Object tileset="001-Grassland01.png" width="4" height="5">
+  <Origin x="3" y="3" />
+  <Tiles>
+    <Tile x="-3" y="-3" index="44" />
+    <Tile x="-2" y="-3" index="45" />
+    <Tile x="-1" y="-3" index="46" />
+    <Tile x="0" y="-3" index="47" />
+    <Tile x="-3" y="-2" index="52" />
+    <Tile x="-2" y="-2" index="53" />
+    <Tile x="-1" y="-2" index="54" />
+    <Tile x="0" y="-2" index="55" />
+    <Tile x="-3" y="-1" index="60" />
+    <Tile x="-2" y="-1" index="61" />
+    <Tile x="-1" y="-1" index="62" />
+    <Tile x="0" y="-1" index="63" />
+    <Tile x="-3" y="0" index="68" />
+    <Tile x="-2" y="0" index="69" />
+    <Tile x="-1" y="0" index="70" />
+    <Tile x="0" y="0" index="71" />
+    <Tile x="-3" y="1" index="76" />
+    <Tile x="-2" y="1" index="77" />
+    <Tile x="-1" y="1" index="78" />
+    <Tile x="0" y="1" index="79" />
+  </Tiles>
+  <Obstacles>
+    <Obstacle x="-2" y="1" />
+    <Obstacle x="-1" y="1" />
+  </Obstacles>
+</Object>

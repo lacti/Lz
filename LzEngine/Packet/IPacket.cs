@@ -2,8 +2,8 @@
 
 namespace LzEngine.Packet
 {
-    [Serializable]
-    public class PacketBase
+    // Packet mark interface
+    public interface IPacket
     {
     }
 }

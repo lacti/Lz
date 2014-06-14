@@ -1,0 +1,8 @@
+﻿UpdateHistory.txt,client\
+$(PROJECT_ROOT)\LzClient\bin\Release\LzClient.exe,Client\
+$(PROJECT_ROOT)\LzClient\bin\Release\LzEngine.dll,Client\
+$(PROJECT_ROOT)\Resources\*,Client\Resources\
+$(PROJECT_ROOT)\Resources\Npc\*,Client\Resources\Npc\
+$(PROJECT_ROOT)\Resources\Object\*,Client\Resources\Object\
+$(PROJECT_ROOT)\Resources\Tileset\*,Client\Resources\Tileset\
+$(PROJECT_ROOT)\Resources\Map\*,Client\Resources\Map\

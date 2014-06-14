@@ -1,0 +1,3 @@
+﻿AccessKey = YourAccessKey
+SecretKey = YourSecretKey
+DistributionId = YourCloudFrontDistributionId

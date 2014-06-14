@@ -4,8 +4,7 @@ using LzEngine.Enum;
 
 namespace LzEngine.Packet
 {
-    [Serializable]
-    public class ObjectPacket : PacketBase
+    public class ObjectPacket : IPacket
     {
         public int ObjectId { get; set; }
         public string Name { get; set; }

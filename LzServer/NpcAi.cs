@@ -97,6 +97,9 @@ namespace LzServer
 
                         _npc.Position = new Point(_npc.Position.X + moveUnit.X, _npc.Position.Y + moveUnit.Y);
                         _npc.MoveState = MoveStateType.Stop;
+
+                        if (!_npc.IsSpawned)
+                            break;
                     }
 
                     const int waitIntervalBase = 1000;

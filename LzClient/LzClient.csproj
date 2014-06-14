@@ -54,7 +54,7 @@
     <ManifestKeyFile>LzClient_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>false</GenerateManifests>
+    <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -78,6 +78,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Object\ObjectWrapper.cs" />
+    <Compile Include="Object\DrawObject.cs" />
     <Compile Include="Util\CanvasPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -89,7 +91,6 @@
       <DependentUpon>FormGame.cs</DependentUpon>
     </Compile>
     <Compile Include="Object\Global.cs" />
-    <Compile Include="Util\GraphicsHolder.cs" />
     <Compile Include="Object\Character.cs" />
     <Compile Include="Object\Npc.cs" />
     <Compile Include="Object\Player.cs" />
@@ -135,12 +136,6 @@
     <None Include="Resources\grassland01bg.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\001-Fighter01.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\018-Thief03.png" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
@@ -157,6 +152,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

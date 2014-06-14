@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using LzClient.Properties;
-using LzClient.Util;
 
 namespace LzClient.Object
 {
-    internal class Effect
+    internal class Effect : IDrawObject
     {
         private const int AnimationCount = 10;
         private const int RowCount = 2;
         private const int ColumnCount = AnimationCount/RowCount;
-
-        private const int DelayCount = 2;
 
         private readonly Lazy<int> _heightLazy;
         private readonly Bitmap _resource;
@@ -39,23 +36,35 @@ namespace LzClient.Object
             get { return _heightLazy.Value; }
         }
 
-        public IEnumerator Draw(GraphicsHolder g)
+        private int _effectXPos;
+        private int _effectYPos;
+        private Rectangle _srcRect;
+
+        public IEnumerable<int> Update()
         {
+            IsDrawable = true;
+
             foreach (var index in Enumerable.Range(0, AnimationCount))
             {
                 var targetPos = _target.Position;
-                var effectXPos = targetPos.X*Global.TileWidth + (Global.TileWidth - Width)/2;
-                var effectYPos = targetPos.Y*Global.TileHeight - Height + 40 /* magic-margin */;
+                _effectXPos = targetPos.X * Global.TileWidth + (Global.TileWidth - Width) / 2;
+                _effectYPos = targetPos.Y * Global.TileHeight - Height + 40 /* magic-margin */;
 
-                var frameColumn = index%ColumnCount;
-                var frameRow = index/ColumnCount;
-                var srcRect = new Rectangle(frameColumn*Width, frameRow*Height, Width, Height);
-                foreach (var _ in Enumerable.Range(0, DelayCount))
-                {
-                    g.Value.DrawImage(_resource, effectXPos, effectYPos, srcRect, GraphicsUnit.Pixel);
-                    yield return 0;
-                }
+                var frameColumn = index % ColumnCount;
+                var frameRow = index / ColumnCount;
+                _srcRect = new Rectangle(frameColumn * Width, frameRow * Height, Width, Height);
+                yield return 80;
             }
+
+            IsDrawable = false;
+        }
+
+        public int DrawPrioirty { get { return int.MaxValue; } }
+        public bool IsDrawable { get; private set; }
+
+        public void Draw(Graphics g)
+        {
+            g.DrawImage(_resource, _effectXPos, _effectYPos, _srcRect, GraphicsUnit.Pixel);
         }
     }
 }

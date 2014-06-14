@@ -41,25 +41,35 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enum\DirectionType.cs" />
+    <Compile Include="Packet\ChatPacket.cs" />
     <Compile Include="Packet\LoginPacket.cs" />
     <Compile Include="Enum\MoveStateType.cs" />
     <Compile Include="Enum\ObjectState.cs" />
     <Compile Include="Enum\ObjectType.cs" />
+    <Compile Include="Packet\PacketSession.cs" />
     <Compile Include="Packet\SkillPacket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Packet\ConnectionPacket.cs" />
     <Compile Include="Packet\MovePacket.cs" />
     <Compile Include="Packet\ObjectPacket.cs" />
-    <Compile Include="Packet\PacketBase.cs" />
+    <Compile Include="Packet\IPacket.cs" />
     <Compile Include="Packet\PacketDispatcher.cs" />
-    <Compile Include="Packet\PacketSocketExtension.cs" />
     <Compile Include="Util\AsyncSocketExtension.cs" />
+    <Compile Include="Util\BinaryIoExtension.cs" />
+    <Compile Include="Util\Coroutine.cs" />
+    <Compile Include="Util\ExclusiveRun.cs" />
     <Compile Include="Util\LockExtension.cs" />
     <Compile Include="Util\Logger.cs" />
+    <Compile Include="Util\SinglyAccessQueue.cs" />
     <Compile Include="Util\XmlDefinition.cs" />
     <Compile Include="Util\XmlDefinitionAttribute.cs" />
     <Compile Include="Util\XmlDefinitionNode.cs" />
     <Compile Include="Util\XmlObject.cs" />
+    <Compile Include="World\MapObject.cs" />
+    <Compile Include="World\ResourceCache.cs" />
+    <Compile Include="World\ResourcePath.cs" />
+    <Compile Include="World\WorldConstants.cs" />
+    <Compile Include="World\WorldMap.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

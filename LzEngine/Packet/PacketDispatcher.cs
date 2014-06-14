@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Sockets;
 using System.Reflection;
 
 namespace LzEngine.Packet
@@ -25,18 +24,18 @@ namespace LzEngine.Packet
                     continue;
 
                 var firstParam = parameters[0].ParameterType;
-                if (!typeof (PacketBase).IsAssignableFrom(firstParam))
+                if (!typeof (IPacket).IsAssignableFrom(firstParam))
                     continue;
 
                 _handlerMap.Add(firstParam, new KeyValuePair<object, MethodInfo>(handlerInstance, method));
             }
         }
 
-        public void Dispatch(PacketBase packet, Socket peerSocket)
+        public void Dispatch(IPacket packet, PacketSession peerSession)
         {
             var packetType = packet.GetType();
             var pair = _handlerMap[packetType];
-            pair.Value.Invoke(pair.Key, new object[] {packet, peerSocket});
+            pair.Value.Invoke(pair.Key, new object[] { packet, peerSession });
         }
     }
 }

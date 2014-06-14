@@ -42,7 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Coroutine.cs" />
     <Compile Include="DataManager.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="NpcAi.cs" />

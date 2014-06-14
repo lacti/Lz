@@ -2,8 +2,7 @@
 
 namespace LzEngine.Packet
 {
-    [Serializable]
-    public class ConnectionPacket : PacketBase
+    public class ConnectionPacket : IPacket
     {
         public bool Connected { get; set; }
     }

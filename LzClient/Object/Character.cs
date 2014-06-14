@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using LzClient.Util;
 using LzEngine.Enum;
 
 namespace LzClient.Object
 {
-    internal class Character
+    internal class Character : IDrawObject
     {
         private const int MoveDirection = 4;
         private const int MovePhase = 4;
@@ -43,6 +42,13 @@ namespace LzClient.Object
             get { return _currentPosition; }
         }
 
+        public int DrawPrioirty
+        {
+            get { return _currentPosition.Y * 1000 + _currentPosition.X; }
+        }
+
+        public bool IsDrawable { get { return IsSpawned; } }
+
         public Point DrawPosition
         {
             get { return _drawPosition; }
@@ -60,13 +66,14 @@ namespace LzClient.Object
             get { return _heightLazy.Value; }
         }
 
-        public void Move(DirectionType direction)
+        public bool Move(DirectionType direction)
         {
             if (MoveState == MoveStateType.Moving)
-                return;
+                return false;
 
             Direction = direction;
             MoveState = MoveStateType.Moving;
+            return true;
         }
 
         public void Correction(Point position, MoveStateType moveState, DirectionType direction)
@@ -76,62 +83,62 @@ namespace LzClient.Object
             Direction = direction;
         }
 
-        public IEnumerator Draw(GraphicsHolder g)
+        private Rectangle _srcRect;
+        
+        public IEnumerable<int> Update()
         {
-            var srcRect = new Rectangle(0, 0, Width, Height);
+            _srcRect = new Rectangle(0, 0, Width, Height);
 
             while (IsSpawned)
             {
-                var charXPos = Position.X*Global.TileWidth + (Global.TileWidth - Width)/2;
-                var charYPos = Position.Y*Global.TileHeight - Height;
+                var charXPos = Position.X * Global.TileWidth + (Global.TileWidth - Width) / 2;
+                var charYPos = Position.Y * Global.TileHeight - Height;
                 _drawPosition = new Point(charXPos, charYPos);
 
                 switch (MoveState)
                 {
                     case MoveStateType.Stop:
-                        srcRect.X = 0;
-                        srcRect.Y = (int) Direction*Height;
-                        DrawCharacter(g.Value, srcRect);
+                        _srcRect.X = 0;
+                        _srcRect.Y = (int)Direction * Height;
                         break;
 
                     case MoveStateType.Moving:
                         const int animationCount = 4;
-                        const int animtaionXDelta = Global.TileWidth/animationCount;
-                        const int animtaionYDelta = Global.TileHeight/animationCount;
+                        const int animtaionXDelta = Global.TileWidth / animationCount;
+                        const int animtaionYDelta = Global.TileHeight / animationCount;
                         var unitMovePos = GetUnitPointByDirection(Direction);
                         foreach (var index in Enumerable.Range(1, animationCount))
                         {
-                            srcRect.X = (index%MovePhase)*Width;
-                            srcRect.Y = (int) Direction*Height;
-                            _drawPosition = new Point(charXPos + unitMovePos.X*index*animtaionXDelta, charYPos + unitMovePos.Y*index*animtaionYDelta);
-                            DrawCharacter(g.Value, srcRect);
+                            _srcRect.X = (index % MovePhase) * Width;
+                            _srcRect.Y = (int)Direction * Height;
+                            _drawPosition = new Point(charXPos + unitMovePos.X * index * animtaionXDelta, charYPos + unitMovePos.Y * index * animtaionYDelta);
 
                             if (index != animationCount)
-                                yield return 0;
+                                yield return 33;
                         }
                         _currentPosition.Offset(unitMovePos);
                         MoveState = MoveStateType.Stop;
                         break;
                 }
 
-                yield return 0;
+                yield return 33;
             }
         }
 
-        private void DrawCharacter(Graphics g, Rectangle srcRect)
+        public void Draw(Graphics g)
         {
-            g.DrawImage(_resource, _drawPosition.X, _drawPosition.Y, srcRect, GraphicsUnit.Pixel);
+            g.DrawImage(_resource, _drawPosition.X, _drawPosition.Y, _srcRect, GraphicsUnit.Pixel);
 
             if (string.IsNullOrWhiteSpace(Name))
                 return;
 
-            var name = Name; // string.Format("{0} ({1},{2})", Name, Position.X, Position.Y);
+            var name = string.Format("{0} ({1},{2})", Name, Position.X, Position.Y);
             var measure = g.MeasureString(name, Global.DefaultFont);
-            var nameX = _drawPosition.X + (Width - measure.Width)/2 + 4 /* magic-margin */;
-            var nameY = _drawPosition.Y - (int) (measure.Height*1.2f);
+            var nameX = _drawPosition.X + (Width - measure.Width) / 2 + 4 /* magic-margin */;
+            var nameY = _drawPosition.Y - (int)(measure.Height * 1.2f);
 
-            foreach (var dx in new[] {-1, 0, 1})
-                foreach (var dy in new[] {-1, 0, 1})
+            foreach (var dx in new[] { -1, 0, 1 })
+                foreach (var dy in new[] { -1, 0, 1 })
                     g.DrawString(name, Global.DefaultFont, Brushes.Black, nameX + dx, nameY + dy);
 
             g.DrawString(name, Global.DefaultFont, Brushes.White, nameX, nameY);

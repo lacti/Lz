@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Object tileset="001-Grassland01.png" width="5" height="5">
+  <Origin x="4" y="4" />
+  <Tiles>
+    <Tile x="-3" y="-4" index="105" />
+    <Tile x="-2" y="-4" index="106" />
+    <Tile x="-1" y="-4" index="107" />
+    <Tile x="-4" y="-3" index="112" />
+    <Tile x="-3" y="-3" index="113" />
+    <Tile x="-2" y="-3" index="114" />
+    <Tile x="-1" y="-3" index="115" />
+    <Tile x="0" y="-3" index="116" />
+    <Tile x="-4" y="-2" index="120" />
+    <Tile x="-3" y="-2" index="121" />
+    <Tile x="-2" y="-2" index="122" />
+    <Tile x="-1" y="-2" index="123" />
+    <Tile x="0" y="-2" index="124" />
+    <Tile x="-4" y="-1" index="128" />
+    <Tile x="-3" y="-1" index="129" />
+    <Tile x="-2" y="-1" index="130" />
+    <Tile x="-1" y="-1" index="131" />
+    <Tile x="0" y="-1" index="132" />
+    <Tile x="-4" y="0" index="136" />
+    <Tile x="-3" y="0" index="137" />
+    <Tile x="-2" y="0" index="138" />
+    <Tile x="-1" y="0" index="139" />
+    <Tile x="0" y="0" index="140" />
+  </Tiles>
+  <Obstacles>
+    <Obstacle x="0" y="0" />
+    <Obstacle x="-1" y="0" />
+    <Obstacle x="-3" y="0" />
+    <Obstacle x="-4" y="0" />
+    <Obstacle x="-2" y="0" />
+    <Obstacle x="-4" y="-1" />
+    <Obstacle x="-4" y="-2" />
+    <Obstacle x="0" y="-2" />
+    <Obstacle x="0" y="-1" />
+    <Obstacle x="-1" y="-1" />
+    <Obstacle x="-1" y="-2" />
+    <Obstacle x="-2" y="-2" />
+    <Obstacle x="-3" y="-2" />
+    <Obstacle x="-3" y="-1" />
+    <Obstacle x="-2" y="-1" />
+  </Obstacles>
+</Object>

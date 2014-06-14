@@ -2,8 +2,7 @@
 
 namespace LzEngine.Packet
 {
-    [Serializable]
-    public class SkillPacket : PacketBase
+    public class SkillPacket : IPacket
     {
         public int AttackerObjectId { get; set; }
         public int AttackeeObjectId { get; set; }
